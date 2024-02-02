@@ -20,7 +20,7 @@ modules:
   - lpkg --unlock
   - apt-get update
 
-- name: add-docker-repo
+- name: install-docker
   type: shell
   commands:
   - install -m 0755 -d /etc/apt/keyrings
