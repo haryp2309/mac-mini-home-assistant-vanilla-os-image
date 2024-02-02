@@ -39,7 +39,6 @@ jobs:
         with:
           images: |
             ghcr.io/vanilla-os/desktop:main
-            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
       - name: Log in to ghcr.io
         uses: redhat-actions/podman-login@v1
