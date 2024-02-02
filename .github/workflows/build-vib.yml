@@ -57,7 +57,11 @@ jobs:
         run: podman build . --tag ghcr.io/haryp2309/custom-vib-image:main
 
       - name: Push to repository
-        run: podman image push "ghcr.io/haryp2309/custom-vib-image:main"
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          registry: ${{ env.IMAGE_REGISTRY }}
+          image: ghcr.io/haryp2309/custom-vib-image:main
+          tags: v1 v1.0.0
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
