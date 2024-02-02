@@ -38,5 +38,4 @@ modules:
   commands:
   - apt-get autoremove -y
   - apt-get clean
-  - SUDO_FORCE_REMOVE=yes apt purge -y sudo
   - lpkg --lock
