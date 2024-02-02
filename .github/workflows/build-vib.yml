@@ -1,74 +1,33 @@
-# This is a basic workflow to help you get started with Actions
+name: Vib Build
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 env:
-  REGISTRY_USER: ${{ github.actor }}
-  REGISTRY_PASSWORD: ${{ github.token }}
-  IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
-  IMAGE_NAME: ghcr.io/haryp2309/custom-vib-image
-  IMAGE_TAG: main
+    REGISTRY_USER: ${{ github.actor }}
+    REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+    IMAGE_NAME: ghcr.io/haryp2309/custom-vib:main
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
+
     runs-on: ubuntu-latest
 
-    permissions: write-all
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-      - name: Cache Container Images Action
-        uses: jamesmortensen/cache-container-images-action@v1
-        with:
-          images: |
-            ghcr.io/vanilla-os/desktop:main
+    - uses: vanilla-os/vib-gh-action@v0.3.3-1
+      with:
+        recipe: 'recipe.yml'
 
-      - name: Log in to ghcr.io
-        uses: redhat-actions/podman-login@v1
-        with:
-          username: ${{ env.REGISTRY_USER }}
-          password: ${{ env.REGISTRY_PASSWORD }}
-          registry: ${{ env.IMAGE_REGISTRY }}
+    - name: Build the Docker image
+      run: docker image build -f Containerfile --tag ${{ env.IMAGE_NAME }} .
 
-      - name: Download vib
-        run: |
-          wget https://github.com/Vanilla-OS/Vib/releases/download/v0.3.3/vib
-          chmod +x vib
-
-      - name: Create Containerfile
-        run: ./vib build recipe.yml
-
-      - name: Build image
-        run: podman build . --tag ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-
-      - name: Push to repository
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          registry: ${{ env.IMAGE_REGISTRY }}
-          image: ${{ env.IMAGE_NAME }}
-          tags: ${{ env.IMAGE_TAG }}
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-          ls
+   # Push the image to GHCR (Image Registry)
+    - name: Push To GHCR
+      run: |
+        docker login ghcr.io -u ${{ env.REGISTRY_USER }} -p ${{ env.REGISTRY_PASSWORD }}
+        docker image push "${{ env.IMAGE_NAME }}"
