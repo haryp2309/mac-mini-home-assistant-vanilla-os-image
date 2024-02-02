@@ -2,7 +2,7 @@ name: Vib Build
 
 on:
   schedule:
-    - cron: '45 15 * * *'
+    - cron: '48 14 * * *'
     
   push:
     branches: [ "main" ]
