@@ -10,7 +10,6 @@ args:
 
 runs:
 - echo 'APT::Install-Recommends "1";' > /etc/apt/apt.conf.d/01norecommends
-- /bin/tee --help
 
 modules:
 
