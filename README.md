@@ -1,3 +1,6 @@
 # haryp2309's Custom Vanilla OS Image 
 Changes:
-- Added Docker and related packages
+- Add Docker and related packages
+- Add Google Chrome
+- Add Firefox
+- Add 1Password
