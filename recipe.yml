@@ -29,6 +29,16 @@ modules:
   commands:
   - curl -fsSL get.docker.com | sh
 
+- name: Install the OS-Agent
+  type: shell
+  commands:
+  - version=$(curl -Ls -o /dev/null -w %{url_effective} https://github.com/home-assistant/os-agent/releases/latest)
+  - version=${version##*/}
+  - wget https://github.com/home-assistant/os-agent/releases/download/${version}/os-agent_${version}_linux_x86_64.deb
+  - dpkg -i os-agent_${version}_linux_x86_64.deb
+  - gdbus introspect --system --dest io.hass.os --object-path /io/hass/os
+  - rm os-agent_${version}_linux_x86_64.deb
+
 
 - name: cleanup
   type: shell
