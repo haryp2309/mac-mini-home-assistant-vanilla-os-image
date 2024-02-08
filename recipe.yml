@@ -39,6 +39,13 @@ modules:
   - gdbus introspect --system --dest io.hass.os --object-path /io/hass/os
   - rm os-agent_${version}_linux_x86_64.deb
 
+- name: Install Home Assistant Supervised
+  type: shell
+  commands:
+  - wget -O homeassistant-supervised.deb https://github.com/home-assistant/supervised-installer/releases/latest/download/homeassistant-supervised.deb
+  - apt install ./homeassistant-supervised.deb
+  - rm ./homeassistant-supervised.deb
+
 
 - name: cleanup
   type: shell
