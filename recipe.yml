@@ -1,6 +1,6 @@
 base: ghcr.io/vanilla-os/desktop:main
 
-name: Vanilla Desktop Custom haryp2309
+name: Mac Mini Home Assistant Vanilla Desktop Custom Image by haryp2309
 
 labels:
   maintainer: haryp2309
@@ -19,49 +19,15 @@ modules:
   - lpkg --unlock
   - apt-get update
 
+- name:
+  type: shell
+  commands:
+  - apt-get install apparmor cifs-utils curl dbus jq libglib2.0-bin lsb-release network-manager nfs-common systemd-journal-remote systemd-resolved udisks2 wget -y
+
 - name: install-docker
   type: shell
   commands:
-  - install -m 0755 -d /etc/apt/keyrings
-  - curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
-  - chmod a+r /etc/apt/keyrings/docker.asc
-  - ls  /etc/apt/sources.list.d
-  - echo \
-    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian bookworm stable" > /etc/apt/sources.list.d/docker.list 
-  - cat /etc/apt/sources.list.d/docker.list
-  - apt-get update
-  - apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
-
-- name: install-google-chrome
-  type: shell
-  commands:
-  - curl -fSsL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor | tee /usr/share/keyrings/google-chrome.gpg >> /dev/null
-  - echo deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main | tee /etc/apt/sources.list.d/google-chrome.list
-  - apt-get update
-  - apt-get install google-chrome-stable -y
-
-- name: install-firefox
-  type: shell
-  commands:
-  - install -d -m 0755 /etc/apt/keyrings
-  - wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- | tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null
-  - gpg -n -q --import --import-options import-show /etc/apt/keyrings/packages.mozilla.org.asc | awk '/pub/{getline; gsub(/^ +| +$/,""); print "\n"$0"\n"}'
-  - echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" | tee -a /etc/apt/sources.list.d/mozilla.list > /dev/null
-  - "printf 'Package: * \\nPin: origin packages.mozilla.org\\nPin-Priority: 1000\\n' | tee /etc/apt/preferences.d/mozilla"
-  - apt-get update
-  - apt-get install firefox -y
-
-- name: install-onepassword
-  type: shell
-  commands: 
-  - curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
-  - echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' | tee /etc/apt/sources.list.d/1password.list
-  - mkdir -p /etc/debsig/policies/AC2D62742012EA22/
-  - curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | tee /etc/debsig/policies/AC2D62742012EA22/1password.pol
-  - mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22
-  - curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg
-  - apt-get update
-  - apt-get install 1password -y
+  - curl -fsSL get.docker.com | sh
 
 
 - name: cleanup
