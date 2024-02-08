@@ -12,7 +12,8 @@ on:
 env:
     REGISTRY_USER: ${{ github.actor }}
     REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-    IMAGE_NAME: ghcr.io/haryp2309/custom-vib:main
+    IMAGE_NAME: ghcr.io/haryp2309/custom-vib
+    LATEST_TAG: main
 
 jobs:
 
@@ -25,15 +26,20 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
     - uses: vanilla-os/vib-gh-action@v0.3.3-1
       with:
         recipe: 'recipe.yml'
 
     - name: Build the Docker image
-      run: docker image build -f Containerfile --tag ${{ env.IMAGE_NAME }} .
+      run: docker image build -f Containerfile --tag ${{ env.IMAGE_NAME }}:${{ env.LATEST_TAG }} --tag ${{ env.IMAGE_NAME }}:${{ steps.date.outputs.date }} .
 
    # Push the image to GHCR (Image Registry)
     - name: Push To GHCR
       run: |
         docker login ghcr.io -u ${{ env.REGISTRY_USER }} -p ${{ env.REGISTRY_PASSWORD }}
-        docker image push "${{ env.IMAGE_NAME }}"
+        docker image push "${{ env.IMAGE_NAME }}:${{ env.LATEST_TAG }}"
+        docker image push "${{ env.IMAGE_NAME }}:${{ steps.date.outputs.date }}"
