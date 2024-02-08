@@ -12,7 +12,7 @@ on:
 env:
     REGISTRY_USER: ${{ github.actor }}
     REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-    IMAGE_NAME: ghcr.io/haryp2309/custom-vib
+    IMAGE_NAME: ghcr.io/haryp2309/mac-mini-home-assistant-vanilla-os-image
     LATEST_TAG: main
 
 jobs:
