@@ -36,7 +36,6 @@ modules:
   - version=${version##*/}
   - wget https://github.com/home-assistant/os-agent/releases/download/${version}/os-agent_${version}_linux_x86_64.deb
   - dpkg -i os-agent_${version}_linux_x86_64.deb
-  - gdbus introspect --system --dest io.hass.os --object-path /io/hass/os
   - rm os-agent_${version}_linux_x86_64.deb
 
 - name: Install Home Assistant Supervised
